@@ -1,0 +1,478 @@
+%  Copyright ICTP 2002
+%  Designed by Paul A. Blaga at "T. Popoviciu" Institute of Numerical Analysis (ICTP)
+%  for "Revue d'Analyse Numerique et de Theorie de l'Approximation" (ANTA).
+%  www.ictp.acad.ro/anta
+%  in collaboration with Emil Catinas
+%      contacts:  Paul A. Blaga (pablaga@math.ubbcluj.ro, pablaga@cs.ubbcluj.ro)
+%                 Emil Catinas  (ecatinas@ictp.acad.ro, ecatinas@cs.ubbcluj.ro)
+%------------------------------------------------------------------------------------
+% this file may be freely used by the other journals of the Romanian Academy:
+%
+%  Mathematica (Cluj)
+%               (for specific instructions see http://math.ubbcluj.ro/~mathjour/)
+%
+%  Revue Roumaine de Mathematiques Pures et Appliquees
+%               (www.ear.ro)
+%
+%  Mathematical Reports
+%               (www.ear.ro)
+%
+%  as well as the other journals of the Romanian Academy.
+%
+%
+% version of January 04, 2005.
+\NeedsTeXFormat{LaTeX2e}
+%
+\ProvidesPackage{anta}[2002/06/20]
+%
+\RequirePackage{fancyhdr}
+%
+\RequirePackage{calc}
+%
+\RequirePackage{geometry}
+%
+\RequirePackage[centerlast,footnotesize]{caption2}
+%
+%%%
+%FONTS
+%%%
+\font\colontitle=cmr9
+%
+\font\sectionfont=cmb10 at 9pt
+%%%
+\renewcommand{\captionlabeldelim}{~}
+%
+%\renewcommand{\thetable}{\thesection.\arabic{table}.}  %%%%%%%*******
+%
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}.}  %%%%%%%*******
+%
+%\baselineskip=12pt plus 4pt minus 4pt
+%\addtolength{\lineskiplimit}{3pt}
+%
+%\addtolength{\lineskip}{5pt}
+%
+\setlength{\abovecaptionskip}{6pt}
+%
+\setlength{\belowcaptionskip}{8pt}
+%
+\floatsep=8pt \textfloatsep=8pt \intextsep=8pt
+%
+\geometry{paper=a4paper,left=4truecm,bottom=5.2truecm,right=4truecm,top=4.5truecm,
+headheight=13truept,nofoot}
+%
+\pagestyle{fancyplain}
+\newcounter{firstpg}
+\setcounter{firstpg}{1} \setcounter{page}{\thefirstpg}
+\newcounter{offpage}[firstpg]
+\newcommand{\printoffpage}{\setcounter{offpage}{\count0-\thefirstpg+1}\theoffpage} \fancyhead{} \fancyfoot{}
+\chead[\colontitle \nouppercase\leftmark]{\colontitle \nouppercase\rightmark}
+%
+\fancyhead[LE,RO]{\colontitle\thepage}
+%
+\fancyhead[LO,RE]{\colontitle\printoffpage}
+%%
+%\DeclareOption{indenting}{\let\thm@indent\indent} \ProcessOptions
+%%
+\newlength{\abstractskip}
+\setlength{\abstractskip}{5pt}
+\newlength{\abstractmargin}
+\setlength{\abstractmargin}{24pt}
+\newlength{\otherskip}
+\setlength{\otherskip}{24pt}
+% from amsart
+%@Maketitle
+\def\@maketitle@hook{\global\let\@maketitle@hook\@empty}
+\def\@maketitle{%
+  \normalfont\normalsize
+  \let\@makefnmark\relax
+  \let\@thefnmark\relax
+  \ifx\@empty\@date\else \AtEndDocument{\@setdate}\fi
+    \ifx\@empty\thankses\else \@footnotemark\@footnotetext{%
+    \def\par{\let\par\@par}\@setthanks}\fi
+  \@mkboth{\@nx\shortauthors}{\@nx\shorttitle}%
+  \ifvoid\abstractbox\global\topskip43truept plus 0pt minus 0pt \relax
+  \else\global\topskip28truept plus 0pt minus 0pt \relax \fi % 5.5pc   "   "   "     "     "         % 32 in loc de 42 !!
+  \@settitle
+  \ifx\@empty\authors \else \@setauthors \fi
+  \ifx\@empty\@dedicatory
+  \else
+    \baselineskip18\p@
+    \vtop{\centering{\footnotesize\itshape\@dedicatory\@@par}%
+      \global\dimen@i\prevdepth}\prevdepth\dimen@i
+  \fi
+  \@setabstract
+  \@setamssubject
+  \@setkeyword
+  \ifx\@empty\@subjclass\else  \skip@20\p@ \advance\skip@-\lastskip
+    \advance\skip@-\baselineskip \vskip\skip@{\hskip\parskip\footnotesize\@setsubjclass\par}\fi
+  \ifx\@empty\@keywords\else {\footnotesize\@setkeywords}\fi
+  \normalsize
+  \if@titlepage
+    \newpage
+  \else
+    \dimen@34\p@ \advance\dimen@-\baselineskip
+    \vskip\dimen@\relax
+  \fi
+} % end \@maketitle
+%abstract
+\renewenvironment{abstract}{%
+  \ifx\maketitle\relax
+    \ClassWarning{\@classname}{Abstract should precede
+      \protect\maketitle\space in AMS documentclasses; reported}%
+  \fi
+   \global\setbox\abstractbox=\vtop \bgroup
+    \normalfont\Small
+    \list{}{\labelwidth\z@
+      \leftmargin\abstractmargin \rightmargin\leftmargin
+      \listparindent\normalparindent \itemindent\z@
+      \parsep\z@ \@plus\p@
+      \let\fullwidthdisplay\relax
+    }%
+     \@topsep30truept\relax
+    \advance \@topsep by -\baselineskip
+\item[\hskip\abstractskip\bfseries\abstractname.]%
+}{%
+  \endlist\egroup
+  \ifx\@setabstract\relax \@setabstracta \fi
+}
+\def\@setabstract{\@setabstracta \global\let\@setabstract\relax}
+\def\@setabstracta{%
+  \ifvoid\abstractbox
+  \else
+    \skip@20\p@ \advance\skip@-\lastskip
+    \advance\skip@-\baselineskip \vskip\skip@
+    \box\abstractbox
+    \prevdepth\z@ % because \abstractbox is a vtop
+  \fi
+}
+%subject class
+\renewcommand{\subjclassname}{%
+\bfseries MSC 2000} \@xp\let\csname subjclassname@1991\endcsname \subjclassname
+\@namedef{subjclassname@2000}{%
+ \bfseries \textup{2000} AMS subject classification}
+%
+%keywords
+\renewcommand{\keywordsname}{Keywords}
+    %
+%SECTION
+
+\def\@startsection#1#2#3#4#5#6{%
+ \if@noskipsec \leavevmode \fi
+ \par \@tempskipa #4\relax
+ \@afterindenttrue
+ \ifdim \@tempskipa <\z@ \@tempskipa -\@tempskipa \@afterindentfalse\fi
+ \if@nobreak \everypar{}\else
+     \addpenalty\@secpenalty\addvspace\@tempskipa\fi
+ \@ifstar{\@dblarg{\@sect{#1}{\@m}{#3}{#4}{#5}{#6}}}%
+         {\@dblarg{\@sect{#1}{#2}{#3}{#4}{#5}{#6}}}%
+}
+\def\@seccntformat#1{%
+  \protect\textup{\protect\@secnumfont
+   \csname  the#1\endcsname
+    \protect\@secnumpunct
+  }%
+}
+\def\@secnumfont{\sectionfont}
+\def\@sect#1#2#3#4#5#6[#7]#8{%
+  \edef\@toclevel{\ifnum#2=\@m 0\else\number#2\fi}%
+  \ifnum #2>\c@secnumdepth \let\@secnumber\@empty
+  \else \@xp\let\@xp\@secnumber\csname the#1\endcsname\fi
+  \@tempskipa #5\relax
+  \ifnum #2>\c@secnumdepth
+    \let\@svsec\@empty
+  \else
+    \refstepcounter{#1}%
+    \edef\@secnumpunct{%
+      \ifdim\@tempskipa>\z@ % not a run-in section heading
+        \@ifnotempty{#8}{.\@nx\enspace}%
+      \else .\@nx\enspace
+      \fi
+    }%
+    \protected@edef\@svsec{%
+      \ifnum#2<\@m
+        \@ifundefined{#1name}{}{%
+          \ignorespaces\csname #1name\endcsname\space
+        }%
+      \fi
+      \@seccntformat{#1}%
+    }%
+  \fi
+  \ifdim \@tempskipa>\z@ % then this is not a run-in section heading
+    \begingroup #6\relax
+    \@hangfrom{\hskip #3\relax\@svsec}%
+    {\interlinepenalty\@M \sectionfont \MakeUppercase{#8}\par}%
+    \endgroup
+    \ifnum#2>\@m \else \@tocwrite{#1}{#8}\fi
+  \else
+  \def\@svsechd{#6\hskip #3\@svsec
+    \@ifnotempty{#8}{\ignorespaces#8\unskip
+       \@addpunct.}%
+    \ifnum#2>\@m \else \@tocwrite{#1}{#8}\fi
+  }%
+  \fi
+  \global\@nobreaktrue
+  \@xsect{#5}}
+\let\@ssect\relax
+%
+\def\publname{\centering\textbf{Journal of Numerical Analysis and Approximation Theory}}
+
+%
+%footnoterule
+\def\footnoterule{\kern-.4\p@
+        \hrule\@width 2.5cm \kern11\p@\kern-\footnotesep}
+%%
+%ADDRESSES
+\def\@setaddresses{\par
+  \nobreak \begingroup
+\footnotesize
+  \def\author##1{\nobreak\addvspace\bigskipamount}%
+  \def\\{\unskip, \ignorespaces}%
+  \interlinepenalty\@M \par
+  \def\address##1##2{\begingroup
+    \par\addvspace\bigskipamount\indent
+    \@ifnotempty{##1}{(\ignorespaces##1\unskip) }%
+    {\scshape\ignorespaces##2}\par\endgroup}%
+  \def\curraddr##1##2{\begingroup
+    \@ifnotempty{##2}{\nobreak\indent{\itshape Current address}%
+      \@ifnotempty{##1}{, \ignorespaces##1\unskip}\/:\space
+      ##2\par}\endgroup}%
+  \def\email##1##2{\begingroup
+    \@ifnotempty{##2}{\nobreak\indent{\itshape E-mail address}%
+      \@ifnotempty{##1}{, \ignorespaces##1\unskip}\/:\space
+      \ttfamily##2\par}\endgroup}%
+  \def\urladdr##1##2{\begingroup
+    \@ifnotempty{##2}{\nobreak\indent{\itshape URL}%
+      \@ifnotempty{##1}{, \ignorespaces##1\unskip}\/:\space
+      \ttfamily##2\par}\endgroup}%
+  \addresses
+  \endgroup
+}
+%%SETs
+\def\@setkeywords{%
+%  {\hskip\otherskip\bfseries \keywordsname.}\enspace \@keywords\@addpunct.\vskip-20truept}
+\begin{center}
+\parbox{113mm}{{\bfseries \keywordsname.}\enspace \@keywords\@addpunct.}
+\vskip-20truept
+\end{center}
+}
+\renewcommand{\@setsubjclass}{%
+ % {\hskip\otherskip\bfseries\subjclassname:}\enspace\@subjclass\@addpunct.}
+\begin{center}
+\parbox{113mm}{{\bfseries \subjclassname.}\enspace \@subjclass\@addpunct.}
+%\vskip-20truept
+\end{center}
+}
+\def\@setcopyright{}
+%%
+%MAKETITLE
+\def\maketitle{\par
+  \@topnum\z@ % this prevents figures from falling at the top of page 1
+  \@setcopyright
+  \thispagestyle{myfirstpage}% this sets first page specifications
+%  \MakeUppercase\shorttitle
+  \ifx\@empty\shortauthors \let\shortauthors\shorttitle
+  \else \andify\shortauthors
+  \fi
+  \@maketitle@hook
+  \begingroup
+  \@maketitle
+  \toks@\@xp{\shortauthors}\@temptokena\@xp{\shorttitle}%
+  \toks4{\def\\{ \ignorespaces}}% defend against questionable usage
+  \edef\@tempa{%
+    \@nx\markboth{\the\toks4
+      \@nx\MakeUppercase{\the\toks@}}{\the\@temptokena}}%
+  \@tempa
+  \endgroup
+  \c@footnote\z@
+  \def\do##1{\let##1\relax}%
+  \do\maketitle \do\@maketitle \do\title \do\@xtitle \do\@title
+  \do\author \do\@xauthor \do\address \do\@xaddress
+  \do\email \do\@xemail \do\curraddr \do\@xcurraddr
+  \do\commby \do\@commby
+  \do\dedicatory \do\@dedicatory \do\thanks \do\thankses
+  \do\keywords \do\@keywords \do\subjclass \do\@subjclass
+  \do\adresa\do\@adresa
+}
+%%
+\renewcommand{\datename}{Received by the editors:}
+%
+\long\def\set@logo#1{%
+  \vbox to\headheight{%
+    \@parboxrestore \fontsize{8}{9\p@}\selectfont
+    \noindent#1\par\vss
+  }%
+}
+%%
+\def\@settitle{\begin{center}%
+  \baselineskip14\p@\relax
+    \upshape
+\uppercasenonmath\@title
+  \@title
+  \end{center}%
+}
+%%
+    \def\volinfo{%
+      Rev. Anal. Num\'er. Th\'eor. Approx., tome \currentvolume \ (\currentyear) no. \currentissue
+    }%
+%%
+\def\article@logo{%
+  \set@logo{%
+    \publname
+    \ifx\@empty\currentvolume
+    \else \\*[4pt]\centering\volinfo, \pageinfo
+    \fi
+  }%
+}
+%%
+    \def\pageinfo{%
+      \ifnum\start@page=\z@
+        pp. 000--000
+      \else
+        \ifx\start@page\end@page
+          p. \start@page
+        \else
+          pp. \start@page--\end@page
+        \fi
+      \fi}%
+\itemsep=.5em
+%%%
+\def\th@remark{%
+\let\thm@indent\indent
+  \thm@headfont{\scshape}%
+  \normalfont % body font
+\thm@preskip=.5\baselineskip\@plus.2\baselineskip
+                             \@minus.2\baselineskip
+  \thm@postskip=\thm@preskip
+}
+\def\th@definition{%
+\let\thm@indent\indent
+  \thm@headfont{\scshape}%
+  \normalfont % body font
+\thm@preskip=.5\baselineskip\@plus.2\baselineskip
+                             \@minus.2\baselineskip
+  \thm@postskip=\thm@preskip
+}
+\def\th@plain{%
+\let\thm@indent\indent
+  \thm@headfont{\scshape}%
+  \itshape % body font
+\thm@preskip=.5\baselineskip\@plus.2\baselineskip
+                             \@minus.2\baselineskip
+  \thm@postskip=\thm@preskip
+}
+%
+\renewcommand{\andify}{%
+  \nxandlist{\unskip, }{\unskip{} \lowercase{and}~}{\unskip, \lowercase{and}~}}
+\def\and{\unskip{ }\lowercase{and} \ignorespaces}
+%%
+%%QEDS
+\newcommand{\displayqed}{\displaymath@qed}
+\newcommand{\eqqed}{\equation@qed}
+\newcommand{\alignqed}{\align@qed}
+\newcommand{\splitqed}{\split@qed}
+%%proof*
+\let\@newpf\proof \let\proof\relax \let\endproof\relax
+\newenvironment{proof*} {\@newpf[\hskip\parindent\proofname]}{\endtrivlist}
+\newenvironment{proof}[1][\hskip\parindent\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep
+        \itshape
+    #1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+%% keywords, subjclass
+\newbox\keywordbox
+\newenvironment{keyword}{%
+  \ifx\maketitle\relax
+    \ClassWarning{\@classname}{Keywords should precede
+      \protect\maketitle\space in AMS documentclasses; reported}%
+  \fi
+  \global\setbox\keywordbox=\vtop \bgroup
+    \normalfont\Small
+    \list{}{\labelwidth\z@
+      \leftmargin\abstractmargin \rightmargin\leftmargin
+      \listparindent\normalparindent \itemindent\z@
+      \parsep\z@ \@plus\p@
+      \let\fullwidthdisplay\relax
+    }%
+    \item[\hskip\abstractskip\bfseries\keywordsname.]%
+}{%
+  \endlist\egroup
+  \ifx\@setkeyword\relax \@setkeyworda \fi
+}
+\def\@setkeyword{\@setkeyworda \global\let\@setkeyword\relax}
+\def\@setkeyworda{%
+  \ifvoid\keywordbox
+  \else
+    \skip@10\p@ \advance\skip@-\lastskip
+    \advance\skip@-1.7\baselineskip \vskip\skip@
+    \box\keywordbox
+    \prevdepth\z@ % because \keywordbox is a vtop
+\vskip-24truept
+  \fi
+}
+%%
+%% keywords, subjclass
+\newbox\amssubjectbox
+\newenvironment{amssubject}{%
+  \ifx\maketitle\relax
+    \ClassWarning{\@classname}{Keywords should precede
+      \protect\maketitle\space in AMS documentclasses; reported}%
+  \fi
+  \global\setbox\amssubjectbox=\vtop \bgroup
+    \normalfont\Small
+    \list{}{\labelwidth\z@
+      \leftmargin\abstractmargin \rightmargin\leftmargin
+      \listparindent\normalparindent \itemindent\z@
+      \parsep\z@ \@plus\p@
+      \let\fullwidthdisplay\relax
+    }%
+    \item[\hskip\abstractskip\bfseries\subjclassname.]%
+}{%
+  \endlist\egroup
+  \ifx\@setamssubject\relax \@setamssubjecta \fi
+}
+\def\@setamssubject{\@setamssubjecta \global\let\@setamssubject\relax}
+\def\@setamssubjecta{%
+  \ifvoid\amssubjectbox
+  \else
+    \skip@10\p@ \advance\skip@-\lastskip
+    \advance\skip@-1.65\baselineskip \vskip\skip@
+    \box\amssubjectbox
+    \prevdepth\z@ % because \amssubjectbox is a vtop
+  \fi
+}
+%%myfirstpage
+\def\ps@myfirstpage{\ps@plain
+  \def\@oddfoot{\normalfont\scriptsize \hfil\hfil
+     \global\topskip\normaltopskip}%
+  \let\@evenfoot\@oddfoot
+  \def\@oddhead{\@serieslogo\hss}%
+  \let\@evenhead\@oddhead % in case an article starts on a left-hand page
+}
+\def\fnum@figure{\figurename.~\thefigure.}
+\def\figurename{Fig}
+
+\def\fnum@table{\tablename~\thetable.}    %%%%%%\def\fnum@table{{\itshape\tablename~\thetable.}}  %%%%%%%*******
+\def\figurename{Fig}
+%\renewcommand{\thetable}{\thesection.\arabic{table}}
+%date
+\def\@setdate{\vskip6truept\colontitle\datename\ \@date\@addpunct.}
+%section
+%%%skip dupa autori
+\def\@setauthors{%
+  \begingroup
+  \trivlist
+  \centering\footnotesize \@topsep30\p@\relax
+  \advance\@topsep by -\baselineskip
+  \item\relax
+  \andify\authors
+  \def\\{\protect\linebreak}%
+\MakeUppercase{\authors}%
+  \endtrivlist
+  \endgroup
+ \ifvoid\abstractbox\vskip0pt plus 0pt minus 0pt\fi
+}
